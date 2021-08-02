@@ -13,6 +13,7 @@ import React, {
   interface InputProps extends TextInputProps {
     name: string;
     icon?: string;
+    onPress(): void;
   }
   
   interface InputValueReference {
@@ -23,8 +24,8 @@ import React, {
     focus(): void;
   }
   
-  const Input: React.RefForwardingComponent<InputRef, InputProps> = (
-    { name, icon, ...rest },
+  const InputSearch: React.RefForwardingComponent<InputRef, InputProps> = (
+    { name, icon, onPress, ...rest },
     ref,
   ) => {
     const { registerField, defaultValue = '', fieldName, error } = useField(name);
@@ -57,13 +58,6 @@ import React, {
   
     return (
       <Container>
-        {icon && (
-          <InputDiv>
-            <InputImgDiv>
-              <Icon name={icon} size={25} color="#7A7A80" />
-            </InputImgDiv>
-          </InputDiv>
-        )}
         <InputField
           ref={inputElementRef}
           keyboardAppearance="dark"
@@ -74,8 +68,13 @@ import React, {
           }}
           {...rest} 
         />
+        <InputDiv>
+          <InputImgDiv onPress={onPress}>
+            <Icon name={icon || ''} size={25} color="#7A7A80" />
+          </InputImgDiv>
+        </InputDiv>
       </Container>
     );
   };
   
-  export default forwardRef(Input);
+  export default forwardRef(InputSearch);

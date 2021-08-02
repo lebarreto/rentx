@@ -6,20 +6,20 @@ import {
     StrictEffect,
   } from 'redux-saga/effects';
 import { AxiosResponse } from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import api from '../../services/api';
 import { ILoginRequest, AuthTypes, ISignUpRequest } from './types';
+import AuthService from '../../services/auth/authService';
 
 export function* login(action: ILoginRequest): Generator {
     try {
-        const { email, password } = action.payload;
-
-        const response = yield call(api.post, 'auth', {
-            email,
-            password,
-        });
+        const response = yield call(AuthService.login, action);
 
         const { token } = (response as AxiosResponse).data;
+
+        if (token) {
+            AsyncStorage.setItem('token', token)
+        }
 
         yield put({
             type: AuthTypes.GET_LOGIN_SUCCESS,
@@ -34,14 +34,7 @@ export function* login(action: ILoginRequest): Generator {
 
 export function* signUp(action: ISignUpRequest): Generator {
     try {
-        const { name, email, password, admin } = action.payload;
-
-        yield call(api.post, 'users', {
-            name,
-            email,
-            password,
-            admin
-        });
+        yield call(AuthService.signUp, action);
 
         yield put({
             type: AuthTypes.GET_SIGN_UP_SUCCESS,

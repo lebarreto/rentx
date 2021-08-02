@@ -10,6 +10,7 @@ import { Container, LoginSub, LoginText } from './styles';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
 import { loginRequest } from '../../store/auth/actions';
+import { ILoginRequestPayload } from '../../store/auth/types';
 
 const Login: React.FC = () => {
     const navigation = useNavigation();
@@ -18,9 +19,9 @@ const Login: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
 	const passwordRef = useRef<TextInput>(null);
     
-    const handleSignIn = useCallback((data: object) => {
+    const handleSignIn = useCallback((data: ILoginRequestPayload) => {
         dispatch(loginRequest(data));
-        navigation.navigate('Home')
+        // navigation.navigate('Home')
       }, []);
 
     return (

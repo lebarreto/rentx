@@ -13,6 +13,7 @@ export interface IAuthState {
     readonly isAuthenticated: boolean;
     readonly loading: boolean;
     readonly error: boolean;
+    readonly token: string;
 }
 
 export interface ILoginRequestPayload {

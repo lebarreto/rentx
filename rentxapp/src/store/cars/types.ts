@@ -1,7 +1,10 @@
 export enum CarsTypes {
     GET_CARS_REQUEST = '@cars/GET_CARS_REQUEST',
     GET_CARS_SUCCESS = '@cars/GET_CARS_SUCCESS',
-    GET_CARS_FAILURE = '@cars/GET_CARS_FAILURE'
+    GET_CARS_FAILURE = '@cars/GET_CARS_FAILURE',
+    GET_CARS_RESULT_REQUEST = '@cars/GET_CARS_RESULT_REQUEST',
+    GET_CARS_RESULT_SUCCESS = '@cars/GET_CARS_RESULT_SUCCESS',
+    GET_CARS_RESULT_FAILURE = '@cars/GET_CARS_RESULT_FAILURE',
 }
 
 export interface ICarsInfo {
@@ -16,6 +19,7 @@ export interface ICarsState {
     readonly carsInfo: ICarsInfo[];
     readonly loading: boolean;
     readonly error: boolean;
+    readonly results: ICarsInfo[];
 }
 
 export interface ICarsRequestPayload {
@@ -37,7 +41,23 @@ export interface ICarsSuccess {
     payload: ICarsInfo[];
 }
 
+export interface ICarsResultRequest {
+    type: typeof CarsTypes.GET_CARS_RESULT_REQUEST;
+}
+
+export interface ICarsResulFailure {
+    type: typeof CarsTypes.GET_CARS_RESULT_FAILURE;
+}
+
+export interface ICarsResulSuccess {
+    type: typeof CarsTypes.GET_CARS_RESULT_SUCCESS;
+    payload: ICarsInfo[];
+}
+
 export type ICarsActions = 
     ICarsRequest | 
     ICarsFailure | 
-    ICarsSuccess;
+    ICarsSuccess | 
+    ICarsResultRequest |
+    ICarsResulFailure | 
+    ICarsResulSuccess ;

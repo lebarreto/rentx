@@ -3,7 +3,8 @@ import { IAuthActions, IAuthState, AuthTypes } from './types';
 const initialState: IAuthState = {
     loading: false,
     error: false,
-    isAuthenticated: false
+    isAuthenticated: false,
+    token: '',
 };
 
 export default function authReducer(
@@ -24,6 +25,7 @@ export default function authReducer(
                 loading: false,
                 error: false,
                 isAuthenticated: true,
+                token: action.token,
             }
         case AuthTypes.GET_LOGIN_FAILURE:
             return {

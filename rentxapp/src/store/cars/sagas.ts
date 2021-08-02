@@ -4,25 +4,19 @@ import {
     all,
     takeLatest,
     StrictEffect,
+    ForkEffect,
+    AllEffect,
   } from 'redux-saga/effects';
 import { AxiosResponse } from 'axios';
 
-import api from '../../services/api';
-import { CarsTypes, ICarsRequest, } from './types';
+import { CarsTypes, ICarsRequest} from './types';
+import CarsService from '../../services/cars/carsService';
 
-export function* getAvailability(action: ICarsRequest): Generator {
+export function* getAvailability(action: ICarsRequest): Generator<StrictEffect> {
     try {
-        const { start_date, end_date } = action.payload;
+        const response = yield call(CarsService.getCarsAvailability, action)
 
-        const response = yield call(api.get, 'availability', {
-            params: {
-                start_date,
-                end_date
-            }
-        });
-        console.log(response)
-
-        const { data } = (response as AxiosResponse);
+        const { data } = response as AxiosResponse;
 
         yield put({
             type: CarsTypes.GET_CARS_SUCCESS,
@@ -35,8 +29,25 @@ export function* getAvailability(action: ICarsRequest): Generator {
     }
 }
 
-export default function* carsSagas(): Generator<StrictEffect> {
+export function* getCars(): Generator<StrictEffect> {
+    try {
+        const response = yield call(CarsService.getCars);
+        const { data } = (response as AxiosResponse);
+
+        yield put({
+            type: CarsTypes.GET_CARS_RESULT_SUCCESS,
+            payload: data
+        })
+    } catch (error) {
+        yield put({
+            type: CarsTypes.GET_CARS_RESULT_FAILURE,
+        })
+    }
+}
+
+export default function* carsSagas(): Generator<AllEffect<ForkEffect>> {
     yield all([
       takeLatest(CarsTypes.GET_CARS_REQUEST, getAvailability),
+      takeLatest(CarsTypes.GET_CARS_RESULT_REQUEST, getCars),
     ]);
   }

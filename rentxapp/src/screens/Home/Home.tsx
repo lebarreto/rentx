@@ -6,11 +6,10 @@ import moment from 'moment';
 import 'moment/locale/pt-br' 
 moment.locale('pt-br')
 
-import { Container, HomeText, DatePickerView, HomeView, CalendarView } from './styles';
+import { Container, HomeText, DatePickerView, HomeView, CalendarView, ResultsView, ResultsDateView } from './styles';
 import Button from '../../components/Button/Button';
 import Dates from '../../components/Dates/Dates';
 import { getCarsAvailabilityRequest } from '../../store/cars/actions';
-import { signOut } from '../../store/auth/actions';
 
 const Home: React.FC = () => {
     const navigation = useNavigation();
@@ -30,7 +29,7 @@ const Home: React.FC = () => {
         }
     }
 
-    const handleConfirmDates = () => {
+    const handleConfirmDates = async () => {
         const startDate = moment(selectedStartDate).format('YYYY-MM-DD').concat(' 00:00:00');
         const endDate = moment(selectedEndDate).format('YYYY-MM-DD').concat(' 23:59:59');
 
@@ -40,41 +39,44 @@ const Home: React.FC = () => {
         }
         
         dispatch(getCarsAvailabilityRequest(data))
+        navigation.navigate('ResultsList', { data: {
+            selectedStartDate, selectedEndDate
+        } })
     }
 
     return (
         <Container>
-           <HomeView>
+            <HomeView>
                 <HomeText>Escolha a data e encontre um carro.</HomeText>
                 <Dates from={moment(selectedStartDate).format('DD MMM YYYY')} to={moment(selectedEndDate).format('DD MMM YYYY')} />
-           </HomeView>
+            </HomeView>
 
             <DatePickerView>
                 <CalendarView>
                     <CalendarPicker
-                        startFromMonday={true}
-                        allowRangeSelection={true}
+                        startFromMonday
+                        allowRangeSelection
                         minDate={minDate}
                         maxDate={maxDate}
                         weekdays={['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom']}
                         months={['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']}
                         nextTitle=">"
-                        nextTitleStyle={{color: '#7A7A80'}}
                         previousTitle="<"
+                        nextTitleStyle={{color: '#7A7A80'}}
                         previousTitleStyle={{color: '#7A7A80'}}
                         todayBackgroundColor="#FDEDEF"
                         selectedDayColor="#DC1637"
                         selectedDayTextColor="#FFFFFF"
+                        dayShape="square"s
                         onDateChange={handleDateChange}
                         textStyle={{color: '#47474D'}}
                     />
 
-                    <Button onPress={() => dispatch(signOut())}>
+                    <Button onPress={handleConfirmDates}>
                         Confirmar
                     </Button>
                 </CalendarView>
             </DatePickerView>
-           
         </Container>
     );
 }

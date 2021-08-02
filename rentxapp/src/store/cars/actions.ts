@@ -1,4 +1,4 @@
-import { ICarsActions, CarsTypes, ICarsRequestPayload, ICarsInfo } from './types';
+import { ICarsActions, CarsTypes, ICarsRequestPayload } from './types';
 
 export const getCarsAvailabilityRequest = (
     payload: ICarsRequestPayload
@@ -7,11 +7,6 @@ export const getCarsAvailabilityRequest = (
     payload
 });
 
-export const getCarsAvailabilitySuccess = (payload: ICarsInfo[]): ICarsActions => ({
-    type: CarsTypes.GET_CARS_SUCCESS,
-    payload,
-});
-
-export const getCarsAvailabilityFailure = (): ICarsActions => ({
-    type: CarsTypes.GET_CARS_FAILURE,
+export const getCarsRequest = (): ICarsActions => ({
+    type: CarsTypes.GET_CARS_RESULT_REQUEST,
 });
