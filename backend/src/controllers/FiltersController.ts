@@ -21,7 +21,15 @@ export default class FiltersController {
             const availability = await getRepository(Cars)
             .createQueryBuilder('cars')
             .where('cars.id <> (:...ids)', { ids: ids })
-            .getMany()
+            .getMany().then(e => e.map(car => {
+                return {
+                  id: car.id,
+                  name: car.name,
+                  brand: car.brand,
+                  daily_value: car.daily_value,
+                  image: car.getImageUrl()
+                }
+              }));
 
             if (!availability) {
                 return response.status(400).json({ error: 'Does not exists any car available for this date.' });
@@ -32,7 +40,15 @@ export default class FiltersController {
         else {
             const availability = await getRepository(Cars)
             .createQueryBuilder('cars')
-            .getMany()
+            .getMany().then(e => e.map(car => {
+                return {
+                  id: car.id,
+                  name: car.name,
+                  brand: car.brand,
+                  daily_value: car.daily_value,
+                  image: car.getImageUrl()
+                }
+              }));
 
             if (!availability) {
                 return response.status(400).json({ error: 'Does not exists any car available for this date.' });
@@ -62,7 +78,15 @@ export default class FiltersController {
         const cars = await getRepository(Cars)
             .createQueryBuilder('cars')
             .where('cars.daily_value >= :min_price and cars.daily_value <= :max_price', { min_price, max_price})
-            .getMany()
+            .getMany().then(e => e.map(car => {
+                return {
+                  id: car.id,
+                  name: car.name,
+                  brand: car.brand,
+                  daily_value: car.daily_value,
+                  image: car.getImageUrl()
+                }
+              }));
 
         if (!cars) {
             return response.status(400).json({ error: 'Does not exists any cars in this value range.' });

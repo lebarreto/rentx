@@ -5,6 +5,7 @@ import {
 } from 'typeorm';
 
 import { Expose } from 'class-transformer';
+import uploadConfig from '../config/multer';
 
 @Entity('cars')
 class Cars {
@@ -23,13 +24,18 @@ class Cars {
     @Column()
     image?: string;
 
-    @Expose({ name: 'image_url' })
+    @Expose({ name: 'image' })
     getImageUrl(): string | null {
         if (!this.image) {
             return null;
         }
 
-        return `${process.env.BACKEND_URL}/files/${this.image}`;
+        switch (uploadConfig.driver) {
+            case 'disk':
+              return `${process.env.BACKEND_URL}/files/${this.image}`;
+            default:
+              return null;
+          }
     }
 }
 
